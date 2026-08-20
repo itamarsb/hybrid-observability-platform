@@ -87,7 +87,7 @@ Hybrid mode is intended for short validation windows and integration testing. It
 
 The platform is designed around the three primary observability signals.
 
-| Signal        | Collection    | Local backend        | Optional AWS destination        |
+| **Signal**        | **Collection**    | **Local backend**        | **Optional AWS destination**        |
 | ------------- | ------------- | -------------------- | ------------------------------- |
 | Metrics       | OpenTelemetry | Prometheus           | Amazon CloudWatch               |
 | Logs          | OpenTelemetry | Loki                 | CloudWatch Logs                 |
