@@ -285,15 +285,15 @@ Directories will not be added as empty placeholders. Each directory will be intr
 
 The initial ADR set will document the following decisions:
 
-| ADR    | Decision                                                                       |
-| ------ | ------------------------------------------------------------------------------ |
-| `0001` | Use OpenTelemetry Collector as the telemetry processing layer                  |
-| `0002` | Use Prometheus instead of Grafana Mimir for the initial single-node deployment |
-| `0003` | Store primary telemetry locally                                                |
-| `0004` | Make CloudWatch and X-Ray export optional                                      |
-| `0005` | Apply bounded telemetry retention                                              |
-| `0006` | Run the initial platform on the development workstation                        |
-| `0007` | Separate the observability platform from the TCC2 laboratory environment       |
+| ADR      | Decision                                                                       |
+| :------: | ------------------------------------------------------------------------------ |
+| `0001`   | Use OpenTelemetry Collector as the telemetry processing layer                  |
+| `0002`   | Use Prometheus instead of Grafana Mimir for the initial single-node deployment |
+| `0003`   | Store primary telemetry locally                                                |
+| `0004`   | Make CloudWatch and X-Ray export optional                                      |
+| `0005`   | Apply bounded telemetry retention                                              |
+| `0006`   | Run the initial platform on the development workstation                        |
+| `0007`   | Separate the observability platform from the TCC2 laboratory environment       |
 
 ADRs are considered immutable historical records. Superseded decisions will be replaced by new ADRs rather than silently rewritten.
 
@@ -301,30 +301,30 @@ ADRs are considered immutable historical records. Superseded decisions will be r
 
 ## Implementation Status
 
-| Component                         | Status      |
-| --------------------------------- | ----------- |
-| Project scope                     | Defined     |
-| Architectural model               | Defined     |
-| Local-first storage strategy      | Defined     |
-| Hybrid AWS strategy               | Defined     |
-| Initial retention policy          | Defined     |
-| Repository engineering baseline   | In progress |
-| Architecture Decision Records     | Planned     |
-| FastAPI reference application     | Planned     |
-| OpenTelemetry instrumentation     | Planned     |
-| OpenTelemetry Collector pipelines | Planned     |
-| Prometheus integration            | Planned     |
-| Loki integration                  | Planned     |
-| Tempo integration                 | Planned     |
-| Grafana provisioning              | Planned     |
-| Operational dashboards            | Planned     |
-| k6 workload profiles              | Planned     |
-| Terraform AWS environment         | Planned     |
-| CloudWatch integration            | Planned     |
-| X-Ray integration                 | Planned     |
-| CI validation                     | Planned     |
-| Security automation               | Planned     |
-| Cost validation                   | Planned     |
+| Component                         | Status        |
+| --------------------------------- | :-----------: |
+| Project scope                     | Defined       |
+| Architectural model               | Defined       |
+| Local-first storage strategy      | Defined       |
+| Hybrid AWS strategy               | Defined       |
+| Initial retention policy          | Defined       |
+| Repository engineering baseline   | In progress   |
+| Architecture Decision Records     | Planned       |
+| FastAPI reference application     | Planned       |
+| OpenTelemetry instrumentation     | Planned       |
+| OpenTelemetry Collector pipelines | Planned       |
+| Prometheus integration            | Planned       |
+| Loki integration                  | Planned       |
+| Tempo integration                 | Planned       |
+| Grafana provisioning              | Planned       |
+| Operational dashboards            | Planned       |
+| k6 workload profiles              | Planned       |
+| Terraform AWS environment         | Planned       |
+| CloudWatch integration            | Planned       |
+| X-Ray integration                 | Planned       |
+| CI validation                     | Planned       |
+| Security automation               | Planned       |
+| Cost validation                   | Planned       |
 
 No component marked as planned should be interpreted as already implemented or validated.
 
