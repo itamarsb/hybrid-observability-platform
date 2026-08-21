@@ -1,419 +1,75 @@
-# ==============================================================================
-# Hybrid Observability Platform
-# Repository-wide ignore rules
-# ==============================================================================
-
-
-# ------------------------------------------------------------------------------
-# Environment variables and secrets
-# ------------------------------------------------------------------------------
-
+# Environment and secrets
 .env
 .env.*
 !.env.example
 !.env.*.example
-
-*.pem
 *.key
+*.pem
 *.p12
 *.pfx
-*.crt
-*.cer
-*.jks
+*.tfvars
+!*.tfvars.example
 
-secrets/
-credentials/
-private/
-local-secrets/
+# Python
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.coverage
+htmlcov/
+dist/
+build/
+*.egg-info/
 
-*credentials*
-*secret*
-*.secret
-
-# Allow explicitly documented secret templates
-!*.example
-!**/*.example
-
-
-# ------------------------------------------------------------------------------
 # Terraform
-# ------------------------------------------------------------------------------
-
-**/.terraform/*
+.terraform/
 *.tfstate
 *.tfstate.*
-*.tfvars
-*.tfvars.json
-
-!*.tfvars.example
-!*.tfvars.json.example
-
+*.tfplan
 crash.log
 crash.*.log
-
 override.tf
 override.tf.json
 *_override.tf
 *_override.tf.json
-
-.terraform.tfstate.lock.info
-
-# Terraform plan files
-*.tfplan
-*.plan
-tfplan
-
-# Terraform CLI configuration
 .terraformrc
 terraform.rc
+# Commit .terraform.lock.hcl for reproducible provider versions.
 
-# Keep Terraform dependency lock files versioned
-!.terraform.lock.hcl
-
-
-# ------------------------------------------------------------------------------
-# AWS
-# ------------------------------------------------------------------------------
-
-.aws/
-aws-credentials*
-aws-config.local
-cdk.out/
-.aws-sam/
-
-# Local AWS CLI and integration outputs
-aws-output/
-aws-exports/
-resource-inventory.local.*
-
-
-# ------------------------------------------------------------------------------
-# Python
-# ------------------------------------------------------------------------------
-
-__pycache__/
-*.py[cod]
-*$py.class
-*.so
-
-.Python
-build/
-develop-eggs/
-dist/
-downloads/
-eggs/
-.eggs/
-lib/
-lib64/
-parts/
-sdist/
-var/
-wheels/
-share/python-wheels/
-
-*.egg-info/
-.installed.cfg
-*.egg
-MANIFEST
-
-# Virtual environments
-.venv/
-venv/
-env/
-ENV/
-venv.bak/
-env.bak/
-
-# Python tooling
-.pytest_cache/
-.mypy_cache/
-.ruff_cache/
-.pyre/
-.pytype/
-.hypothesis/
-.tox/
-.nox/
-
-.coverage
-.coverage.*
-coverage.xml
-htmlcov/
-pytest-report.xml
-test-results/
-
-# Python logs and local databases
-*.py.log
-*.sqlite
-*.sqlite3
-*.db
-
-
-# ------------------------------------------------------------------------------
-# Docker and container runtime
-# ------------------------------------------------------------------------------
-
-docker-data/
-container-data/
-runtime-data/
-
-docker-compose.override.yml
-compose.override.yaml
-compose.override.yml
-
-*.container.log
-*.docker.log
-
-# Local container environment files
-docker.env
-docker.env.*
-!docker.env.example
-
-
-# ------------------------------------------------------------------------------
-# Observability runtime data
-# ------------------------------------------------------------------------------
-
+# Runtime telemetry and generated evidence
 data/
-volumes/
-
-prometheus-data/
-loki-data/
-tempo-data/
-grafana-data/
-otel-data/
-
-**/prometheus/data/
-**/loki/data/
-**/tempo/data/
-**/grafana/data/
-**/otel-collector/data/
-
-# Write-ahead logs and local telemetry storage
-wal/
-**/wal/
-chunks/
-**/chunks/
-blocks/
-**/blocks/
-compactor/
-**/compactor/
-
-# Local provisioning generated at runtime
-generated-provisioning/
-rendered-config/
-runtime-config/
-
-# Telemetry exports and captures
-telemetry-export/
-telemetry-data/
-trace-export/
-log-export/
-metric-export/
-
-*.prom
-*.otlp
-*.otlp.json
-*.trace.json
-
-# Preserve versioned configuration and examples
-!observability/**/config/
-!observability/**/provisioning/
-!observability/**/dashboards/
-
-
-# ------------------------------------------------------------------------------
-# Grafana
-# ------------------------------------------------------------------------------
-
-grafana.db
-grafana.ini.local
-
-grafana/plugins/
-grafana/png/
-
-grafana-session/
-grafana-sessions/
-
-
-# ------------------------------------------------------------------------------
-# Prometheus
-# ------------------------------------------------------------------------------
-
-queries.active
-lock
-*.tmp
-
-
-# ------------------------------------------------------------------------------
-# Loki and Tempo
-# ------------------------------------------------------------------------------
-
-loki-index/
-loki-cache/
-tempo-blocks/
-tempo-wal/
-
-
-# ------------------------------------------------------------------------------
-# OpenTelemetry
-# ------------------------------------------------------------------------------
-
-otelcol.pid
-otel-collector.pid
-
-collector-output/
-collector-debug/
-
-
-# ------------------------------------------------------------------------------
-# k6 and load testing
-# ------------------------------------------------------------------------------
-
-k6-results/
-load-test-results/
-performance-results/
-
-*.k6.json
-*.k6.csv
-summary.json
-summary.html
-
-
-# ------------------------------------------------------------------------------
-# Logs, process files, and temporary outputs
-# ------------------------------------------------------------------------------
-
+runtime/
+artifacts/
 *.log
-logs/
-
 *.pid
-*.pid.lock
-*.seed
+*.wal
+*.prom
+*.trace
+*.har
+k6-results/
 
+# Local tool output
+.scannerwork/
+.trivy/
+.cache/
 tmp/
 temp/
-.cache/
-.cache-loader/
 
-*.bak
-*.backup
-*.old
-*.orig
-*.rej
+# Editors and operating systems
+.vscode/
+.idea/
 *.swp
 *.swo
-*~
-
-
-# ------------------------------------------------------------------------------
-# Security and analysis tools
-# ------------------------------------------------------------------------------
-
-checkov-report.*
-tfsec-report.*
-trivy-report.*
-grype-report.*
-syft-report.*
-semgrep-report.*
-bandit-report.*
-gitleaks-report.*
-
-.sarif/
-*.sarif
-
-# Preserve intentionally committed security policies
-!SECURITY.md
-!docs/security/**
-
-
-# ------------------------------------------------------------------------------
-# Visual Studio Code and development environments
-# ------------------------------------------------------------------------------
-
-.vscode/*
-!.vscode/extensions.json
-!.vscode/settings.example.json
-!.vscode/tasks.example.json
-!.vscode/launch.example.json
-
-.idea/
-*.code-workspace
-
-.devcontainer/local/
-
-
-# ------------------------------------------------------------------------------
-# Operating systems
-# ------------------------------------------------------------------------------
-
-# Windows
-Thumbs.db
-Thumbs.db:encryptable
-ehthumbs.db
-ehthumbs_vista.db
-[Dd]esktop.ini
-$RECYCLE.BIN/
-*.lnk
-
-# macOS
 .DS_Store
-.AppleDouble
-.LSOverride
-Icon
-._*
-.DocumentRevisions-V100
-.fseventsd
-.Spotlight-V100
-.TemporaryItems
-.Trashes
-.VolumeIcon.icns
-.com.apple.timemachine.donotpresent
+Thumbs.db
+Desktop.ini
 
-# Linux
-.directory
-.Trash-*
-.nfs*
-
-
-# ------------------------------------------------------------------------------
-# Archives and local packages
-# ------------------------------------------------------------------------------
-
+# Local archives
 *.zip
 *.tar
 *.tar.gz
 *.tgz
-*.7z
-*.rar
 
-artifacts/
-packages/
-
-
-# ------------------------------------------------------------------------------
-# Local documentation and screenshots
-# ------------------------------------------------------------------------------
-
-screenshots/local/
-evidence/local/
-reports/local/
-
-# Preserve reviewed and intentionally published project evidence
-!docs/images/
-!docs/images/**
-!images/
-!images/**
-
-
-# ------------------------------------------------------------------------------
-# Repository-specific local files
-# ------------------------------------------------------------------------------
-
-.local/
-.local-config/
-workspace/
-sandbox/
-
-cost-estimate.local.*
-inventory.local.*
-validation.local.*
