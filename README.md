@@ -2,7 +2,7 @@
 
 A local-first observability platform that collects and correlates metrics, logs, and traces from an instrumented FastAPI service. The project uses OpenTelemetry and the Grafana observability stack, with an optional AWS integration for short-lived hybrid validation.
 
-> **Status:** architecture baseline. Runtime services and deployment automation are not available yet. See the [roadmap](#roadmap).
+> **Status:** instrumented FastAPI application baseline implemented. The local observability stack and hybrid deployment remain pending. See the [roadmap](#roadmap).
 
 ## What this project demonstrates
 
@@ -110,7 +110,7 @@ See [SECURITY.md](SECURITY.md) for vulnerability reporting and security expectat
 ## Roadmap
 
 - [x] Define architecture, scope, and engineering decisions
-- [ ] Implement and test the instrumented FastAPI service
+- [x] Implement and test the instrumented FastAPI service
 - [ ] Add the local OpenTelemetry, Prometheus, Loki, Tempo, and Grafana stack
 - [ ] Provision dashboards, data sources, alerts, and recording rules
 - [ ] Add K6 workloads and failure scenarios
