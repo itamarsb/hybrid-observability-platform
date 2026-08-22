@@ -11,7 +11,7 @@ A local-first observability platform that collects and correlates metrics, logs,
 - metrics, logs, and traces with Prometheus, Loki, and Tempo;
 - Grafana dashboards and cross-signal investigation;
 - repeatable local deployment with Docker Compose;
-- controlled load generation with k6;
+- controlled load generation with K6;
 - optional CloudWatch and X-Ray export provisioned with Terraform;
 - practical controls for secrets, retention, cardinality, and cloud cost.
 
@@ -51,7 +51,7 @@ More detail is available in [docs/architecture.md](docs/architecture.md).
 | Logs | Loki |
 | Traces | Tempo |
 | Visualization | Grafana |
-| Load testing | k6 |
+| Load testing | K6 |
 | Local orchestration | Docker Compose |
 | AWS provisioning | Terraform |
 | CI | GitHub Actions |
@@ -113,7 +113,7 @@ See [SECURITY.md](SECURITY.md) for vulnerability reporting and security expectat
 - [ ] Implement and test the instrumented FastAPI service
 - [ ] Add the local OpenTelemetry, Prometheus, Loki, Tempo, and Grafana stack
 - [ ] Provision dashboards, data sources, alerts, and recording rules
-- [ ] Add k6 workloads and failure scenarios
+- [ ] Add K6 workloads and failure scenarios
 - [ ] Provision the optional AWS path with Terraform
 - [ ] Add automated validation, security scanning, and cleanup checks
 - [ ] Publish reproducible screenshots and an end-to-end demonstration
