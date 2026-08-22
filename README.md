@@ -1,5 +1,7 @@
 # Hybrid Observability Platform
 
+[![Application CI](https://github.com/itamarsb/hybrid-observability-platform/actions/workflows/app-ci.yml/badge.svg?branch=main)](https://github.com/itamarsb/hybrid-observability-platform/actions/workflows/app-ci.yml)
+
 A local-first observability platform that collects and correlates metrics, logs, and traces from an instrumented FastAPI service. The project uses OpenTelemetry and the Grafana observability stack, with an optional AWS integration for short-lived hybrid validation.
 
 > **Status:** instrumented FastAPI application baseline implemented. The local observability stack and hybrid deployment remain pending. See the [roadmap](#roadmap).
