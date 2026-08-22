@@ -59,7 +59,7 @@ The API will be available at:
 ## Endpoints
 
 | Method | Endpoint | Purpose | Expected status |
-|---|---|---|---:|
+|:---:|---|---|:---:|
 | `GET` | `/health/live` | Confirms that the application process is running | `200` |
 | `GET` | `/health/ready` | Confirms that the application is ready to receive requests | `200` |
 | `GET` | `/api/v1/items/{item_id}` | Returns a deterministic reference item | `200` |
