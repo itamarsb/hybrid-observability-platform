@@ -298,7 +298,7 @@ def create_app(settings: Settings | None = None) -> FastAPI:
         """Simulate success, failure, or timeout from a dependency."""
 
         try:
-           with telemetry_runtime.tracer.start_as_current_span("dependency.simulated") as span:
+            with telemetry_runtime.tracer.start_as_current_span("dependency.simulated") as span:
                 span.set_attribute("dependency.name", "simulated-upstream")
                 span.set_attribute("dependency.outcome", outcome)
 
