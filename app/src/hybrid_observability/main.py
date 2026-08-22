@@ -9,7 +9,7 @@ from fastapi import FastAPI, Path, Query, Request
 from fastapi.responses import JSONResponse
 from opentelemetry import trace
 from opentelemetry.trace import Status, StatusCode
-from pydantic import BaseModel, Field
+from pydantic import BaseModel
 
 from hybrid_observability.config import Settings, get_settings
 from hybrid_observability.logging import configure_logging, get_logger
