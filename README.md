@@ -64,7 +64,7 @@ The default mode runs without an AWS account or AWS credentials. Telemetry remai
 
 ### Hybrid
 
-Hybrid mode adds selected AWS exporters while keeping the local pipeline active. It is intended for integration tests and portfolio demonstrations, not permanent duplication of all telemetry.
+Hybrid mode adds selected AWS exporters while keeping the local pipeline active. It is intended for short-lived integration validation, not permanent duplication of all telemetry.
 
 ## Repository layout
 
