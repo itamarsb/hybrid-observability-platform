@@ -93,9 +93,7 @@ def test_latency_scenario_rejects_excessive_delay(
     assert response.status_code == 400
     assert response.json() == {
         "error": "scenario_delay_exceeded",
-        "message": (
-            "Requested delay exceeds the configured maximum of 100 ms."
-        ),
+        "message": ("Requested delay exceeds the configured maximum of 100 ms."),
         "trace_id": None,
     }
 
