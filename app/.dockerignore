@@ -1,1 +1,58 @@
+# Version control and editor metadata
+.git/
+.gitignore
+.vscode/
+.idea/
+*.swp
+*.swo
 
+# Python virtual environments and caches
+.venv/
+venv/
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+
+# Test and coverage output
+tests/
+.coverage
+.coverage.*
+htmlcov/
+coverage.xml
+pytest-report.xml
+
+# Build and packaging output
+build/
+dist/
+*.egg-info/
+wheels/
+
+# Environment files and secrets
+.env
+.env.*
+!.env.example
+!.env.*.example
+*.key
+*.pem
+*.p12
+*.pfx
+
+# Runtime and local output
+*.log
+*.pid
+tmp/
+temp/
+artifacts/
+
+# Operating-system metadata
+.DS_Store
+Thumbs.db
+Desktop.ini
+
+# Local archives
+*.zip
+*.tar
+*.tar.gz
+*.tgz
