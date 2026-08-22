@@ -1,1 +1,94 @@
+[build-system]
+requires = ["hatchling>=1.27"]
+build-backend = "hatchling.build"
 
+[project]
+name = "hybrid-observability-api"
+version = "0.1.0"
+description = "Instrumented FastAPI workload for the Hybrid Observability Platform."
+readme = "README.md"
+requires-python = ">=3.12,<3.14"
+license = { text = "Apache-2.0" }
+authors = [
+    { name = "Itamar de Sá Britto Júnior" }
+]
+dependencies = [
+    "fastapi>=0.116,<1.0",
+    "opentelemetry-api>=1.36,<2.0",
+    "opentelemetry-exporter-otlp-proto-grpc>=1.36,<2.0",
+    "opentelemetry-instrumentation-fastapi>=0.57b0,<1.0",
+    "opentelemetry-sdk>=1.36,<2.0",
+    "pydantic-settings>=2.10,<3.0",
+    "python-json-logger>=3.3,<4.0",
+    "uvicorn[standard]>=0.35,<1.0",
+]
+
+[project.optional-dependencies]
+dev = [
+    "httpx>=0.28,<1.0",
+    "mypy>=1.17,<2.0",
+    "pytest>=8.4,<10.0",
+    "pytest-cov>=6.2,<8.0",
+    "ruff>=0.12,<1.0",
+]
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/hybrid_observability"]
+
+[tool.pytest.ini_options]
+addopts = [
+    "-ra",
+    "--strict-config",
+    "--strict-markers",
+    "--cov=hybrid_observability",
+    "--cov-report=term-missing",
+    "--cov-fail-under=85",
+]
+testpaths = ["tests"]
+pythonpath = ["src"]
+
+[tool.coverage.run]
+branch = true
+source = ["hybrid_observability"]
+
+[tool.coverage.report]
+show_missing = true
+skip_covered = true
+exclude_also = [
+    "if TYPE_CHECKING:",
+    "if __name__ == .__main__.:",
+]
+
+[tool.ruff]
+target-version = "py312"
+line-length = 100
+src = ["src", "tests"]
+
+[tool.ruff.lint]
+select = [
+    "E",
+    "F",
+    "I",
+    "B",
+    "UP",
+    "ASYNC",
+    "SIM",
+]
+ignore = []
+
+[tool.ruff.lint.per-file-ignores]
+"tests/**/*.py" = ["S101"]
+
+[tool.ruff.format]
+quote-style = "double"
+indent-style = "space"
+line-ending = "auto"
+
+[tool.mypy]
+python_version = "3.12"
+strict = true
+files = ["src", "tests"]
+plugins = ["pydantic.mypy"]
+warn_unreachable = true
+pretty = true
+show_error_codes = true
