@@ -1,1 +1,159 @@
+name: Application CI
 
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - "app/**"
+      - ".github/workflows/app-ci.yml"
+
+  pull_request:
+    branches:
+      - main
+    paths:
+      - "app/**"
+      - ".github/workflows/app-ci.yml"
+
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: app-ci-${{ github.ref }}
+  cancel-in-progress: true
+
+env:
+  PYTHON_VERSION: "3.12"
+  IMAGE_NAME: hybrid-observability-api
+  IMAGE_TAG: ci
+
+jobs:
+  quality:
+    name: Quality and tests
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+
+    defaults:
+      run:
+        working-directory: app
+
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v6
+
+      - name: Set up Python
+        uses: actions/setup-python@v6
+        with:
+          python-version: ${{ env.PYTHON_VERSION }}
+          cache: pip
+          cache-dependency-path: app/pyproject.toml
+
+      - name: Install application and development dependencies
+        run: |
+          python -m pip install --upgrade pip
+          python -m pip install --editable ".[dev]"
+
+      - name: Run Ruff lint
+        run: python -m ruff check src tests
+
+      - name: Verify Ruff formatting
+        run: python -m ruff format --check src tests
+
+      - name: Run mypy
+        run: python -m mypy src tests
+
+      - name: Run tests with coverage
+        run: python -m pytest
+
+  container:
+    name: Container build and smoke test
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    needs:
+      - quality
+
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v6
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Build local container image
+        uses: docker/build-push-action@v6
+        with:
+          context: ./app
+          file: ./app/Dockerfile
+          push: false
+          load: true
+          tags: ${{ env.IMAGE_NAME }}:${{ env.IMAGE_TAG }}
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+
+      - name: Verify non-root image user
+        run: |
+          configured_user="$(docker image inspect \
+            --format '{{.Config.User}}' \
+            "${IMAGE_NAME}:${IMAGE_TAG}")"
+
+          test "${configured_user}" = "appuser"
+
+      - name: Start application container
+        run: |
+          docker run \
+            --detach \
+            --name hybrid-observability-api-ci \
+            --publish 8000:8000 \
+            --env OTEL_SDK_DISABLED=true \
+            --health-interval=2s \
+            --health-timeout=2s \
+            --health-start-period=1s \
+            --health-retries=5 \
+            "${IMAGE_NAME}:${IMAGE_TAG}"
+
+      - name: Wait for container health
+        run: |
+          for attempt in {1..20}; do
+            status="$(docker inspect \
+              --format '{{.State.Health.Status}}' \
+              hybrid-observability-api-ci)"
+
+            if [ "${status}" = "healthy" ]; then
+              exit 0
+            fi
+
+            if [ [ "${status}" = "unhealthy" ]; then
+              docker logs hybrid-observability-api-ci
+              exit 1
+            fi
+
+            sleep 1
+          done
+
+          docker logs hybrid-observability-api-ci
+          exit 1
+
+      - name: Run API smoke tests
+        run: |
+          curl --fail --silent --show-error \
+            http://127.0.0.1:8000/health/live
+
+          curl --fail --silent --show-error \
+            http://127.0.0.1:8000/health/ready
+
+          curl --fail --silent --show-error \
+            http://127.0.0.1:8000/api/v1/items/1
+
+      - name: Show container logs on failure
+        if: failure()
+        run: docker logs hybrid-observability-api-ci
+
+      - name: Remove application container
+        if: always()
+        run: |
+          docker rm \
+            --force \
+            hybrid-observability-api-ci \
+            2>/dev/null || true
