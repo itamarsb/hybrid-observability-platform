@@ -26,6 +26,7 @@ services:
       OTEL_EXPORTER_OTLP_INSECURE: "true"
       OTEL_TRACES_SAMPLER: parentbased_traceidratio
       OTEL_TRACES_SAMPLER_ARG: 1.0
+      OTEL_METRIC_EXPORT_INTERVAL: "5000"
     ports:
       - "127.0.0.1:8000:8000"
     depends_on:
@@ -103,7 +104,7 @@ services:
     command:
       - --config.file=/etc/prometheus/prometheus.yml
       - --storage.tsdb.path=/prometheus
-      - --storage.tsdb.retention.time=24h
+      - --storage.tsdb.retention.time=48h
       - --storage.tsdb.retention.size=2GB
       - --web.enable-lifecycle
     volumes:
