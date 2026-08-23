@@ -74,9 +74,7 @@ def _build_sampler(settings: Settings) -> Sampler:
     samplers: dict[str, Sampler] = {
         "always_on": ALWAYS_ON,
         "always_off": ALWAYS_OFF,
-        "traceidratio": TraceIdRatioBased(
-            settings.traces_sampler_argument
-        ),
+        "traceidratio": TraceIdRatioBased(settings.traces_sampler_argument),
         "parentbased_always_on": ParentBased(root=ALWAYS_ON),
         "parentbased_always_off": ParentBased(root=ALWAYS_OFF),
         "parentbased_traceidratio": ParentBased(
@@ -96,9 +94,7 @@ def _build_resource(settings: Settings) -> Resource:
             "service.version": settings.service_version,
             "service.namespace": "hybrid-observability-platform",
             "service.instance.id": str(uuid4()),
-            "deployment.environment.name": (
-                settings.deployment_environment
-            ),
+            "deployment.environment.name": settings.deployment_environment,
         }
     )
 
@@ -173,9 +169,7 @@ def initialize_telemetry(
         extra={
             "otlp_endpoint": settings.otlp_endpoint,
             "traces_sampler": settings.traces_sampler,
-            "traces_sampler_argument": (
-                settings.traces_sampler_argument
-            ),
+            "traces_sampler_argument": settings.traces_sampler_argument,
         },
     )
 
