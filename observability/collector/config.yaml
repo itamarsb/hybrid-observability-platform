@@ -30,7 +30,7 @@ processors:
         action: upsert
 
       - key: deployment.environment.name
-        value: local
+        value: development
         action: upsert
 
   batch:
