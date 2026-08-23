@@ -10,11 +10,28 @@ receivers:
       http:
         endpoint: 0.0.0.0:4318
 
+  fluent_forward:
+    endpoint: 0.0.0.0:24224
+
 processors:
   memory_limiter:
     check_interval: 1s
     limit_mib: 256
     spike_limit_mib: 64
+
+  resource/application_logs:
+    attributes:
+      - key: service.name
+        value: hybrid-observability-api
+        action: upsert
+
+      - key: service.namespace
+        value: hybrid-observability-platform
+        action: upsert
+
+      - key: deployment.environment.name
+        value: local
+        action: upsert
 
   batch:
     timeout: 5s
@@ -42,6 +59,19 @@ service:
   extensions:
     - health_check
 
+  telemetry:
+    logs:
+      level: info
+      encoding: json
+
+    metrics:
+      readers:
+        - pull:
+            exporter:
+              prometheus:
+                host: 0.0.0.0
+                port: 8888
+
   pipelines:
     metrics:
       receivers:
@@ -52,15 +82,6 @@ service:
       exporters:
         - prometheus
 
-    logs:
-      receivers:
-        - otlp
-      processors:
-        - memory_limiter
-        - batch
-      exporters:
-        - otlp_http/loki
-
     traces:
       receivers:
         - otlp
@@ -70,16 +91,21 @@ service:
       exporters:
         - otlp_grpc/tempo
 
-  telemetry:
-    logs:
-      level: INFO
-      encoding: json
+    logs/otlp:
+      receivers:
+        - otlp
+      processors:
+        - memory_limiter
+        - batch
+      exporters:
+        - otlp_http/loki
 
-    metrics:
-      level: basic
-      readers:
-        - pull:
-            exporter:
-              prometheus:
-                host: 0.0.0.0
-                port: 8888
+    logs/application:
+      receivers:
+        - fluent_forward
+      processors:
+        - memory_limiter
+        - resource/application_logs
+        - batch
+      exporters:
+        - otlp_http/loki
