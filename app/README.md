@@ -1,6 +1,6 @@
 # Hybrid Observability API
 
-Instrumented FastAPI workload used by the [Hybrid Observability Platform](../README.md) to generate normal requests, latency, errors, dependency failures, structured logs, and OpenTelemetry traces.
+Instrumented FastAPI workload used by the [Hybrid Observability Platform](../README.md) to generate normal requests, latency, errors, dependency failures, OpenTelemetry metrics and traces, and structured JSON logs.
 
 ## Requirements
 
@@ -84,6 +84,52 @@ curl "http://127.0.0.1:8000/api/v1/scenarios/dependency?outcome=timeout"
 
 The scenario endpoints intentionally produce observable success, latency, client validation errors, service errors, dependency failures, and timeouts.
 
+## Telemetry signals
+
+### Metrics
+
+The OpenTelemetry FastAPI instrumentation produces standard HTTP server metrics. The application also creates controlled, low-cardinality metrics for its demonstration scenarios.
+
+| Metric | Type | Unit | Purpose |
+|---|---|---|---|
+| `app.scenario.requests` | Counter | `{request}` | Counts controlled scenarios by type and outcome |
+| `app.scenario.duration` | Histogram | `ms` | Records controlled latency scenario duration |
+| `app.dependency.requests` | Counter | `{request}` | Counts simulated dependency calls by outcome |
+| `app.dependency.duration` | Histogram | `ms` | Records simulated dependency call duration |
+
+Controlled metric attributes include:
+
+| Attribute | Values |
+|---|---|
+| `scenario.type` | `latency`, `error` |
+| `scenario.outcome` | `success`, `rejected`, `failure` |
+| `dependency.outcome` | `success`, `failure`, `timeout` |
+
+Attribute values are bounded deliberately. Request identifiers, arbitrary URLs, exception messages, and other unbounded values are not used as metric attributes.
+
+### Logs
+
+Application and Uvicorn logs are written as structured JSON to standard output. Each record includes:
+
+- timestamp;
+- severity;
+- logger name;
+- service name;
+- service version;
+- deployment environment;
+- trace ID, when an active trace is available;
+- span ID, when an active span is available.
+
+The application does not send logs directly to Loki. The local platform will collect container output through the OpenTelemetry Collector and route it to Loki.
+
+### Traces
+
+FastAPI requests are instrumented automatically. Controlled latency and dependency scenarios also create explicit spans with scenario-specific attributes.
+
+Traces are exported through OTLP gRPC. Health-check endpoints are excluded from instrumentation to avoid producing repetitive operational noise.
+
+Metrics and traces share the same OpenTelemetry resource identity, including service name, version, namespace, instance ID, and deployment environment.
+
 ## Quality checks
 
 Run all commands from the `app` directory after installing the development dependencies.
@@ -118,7 +164,7 @@ Apply automatic formatting when necessary:
 ruff format src tests
 ```
 
-The test configuration requires at least 85% statement coverage and enables branch coverage.
+The test configuration requires at least 85% statement coverage and enables branch coverage. Metric tests use an in-memory OpenTelemetry reader and do not require a running Collector.
 
 ## Container execution
 
@@ -171,6 +217,7 @@ Configuration is loaded from environment variables. A local `.env` file may also
 | `OTEL_SDK_DISABLED` | `false` | Disables OpenTelemetry SDK initialization when set to `true` |
 | `OTEL_EXPORTER_OTLP_ENDPOINT` | `http://localhost:4317` | OTLP gRPC Collector endpoint |
 | `OTEL_EXPORTER_OTLP_INSECURE` | `true` | Enables an insecure OTLP gRPC connection |
+| `OTEL_METRIC_EXPORT_INTERVAL` | `60000` | Periodic metric export interval in milliseconds |
 | `OTEL_TRACES_SAMPLER` | `parentbased_traceidratio` | OpenTelemetry trace sampler |
 | `OTEL_TRACES_SAMPLER_ARG` | `1.0` | Trace sampling ratio between `0.0` and `1.0` |
 | `APP_MAXIMUM_SCENARIO_DELAY_MS` | `5000` | Maximum permitted latency scenario delay |
@@ -182,7 +229,18 @@ Example configuration for local execution with telemetry enabled:
 export OTEL_SDK_DISABLED=false
 export OTEL_EXPORTER_OTLP_ENDPOINT=http://localhost:4317
 export OTEL_EXPORTER_OTLP_INSECURE=true
+export OTEL_METRIC_EXPORT_INTERVAL=10000
 uvicorn hybrid_observability.main:app --host 127.0.0.1 --port 8000
 ```
 
-Docker Compose will later configure the Collector endpoint as `http://otel-collector:4317`.
+On Windows PowerShell:
+
+```powershell
+$env:OTEL_SDK_DISABLED = "false"
+$env:OTEL_EXPORTER_OTLP_ENDPOINT = "http://localhost:4317"
+$env:OTEL_EXPORTER_OTLP_INSECURE = "true"
+$env:OTEL_METRIC_EXPORT_INTERVAL = "10000"
+uvicorn hybrid_observability.main:app --host 127.0.0.1 --port 8000
+```
+
+Docker Compose will configure the Collector endpoint as `http://otel-collector:4317` and use a shorter metric export interval for local demonstrations.
