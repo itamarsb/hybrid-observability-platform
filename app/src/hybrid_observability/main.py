@@ -3,6 +3,7 @@
 import asyncio
 from collections.abc import AsyncIterator
 from contextlib import asynccontextmanager
+from time import perf_counter
 from typing import Annotated, Literal
 
 from fastapi import FastAPI, Path, Query, Request
@@ -141,6 +142,27 @@ def create_app(settings: Settings | None = None) -> FastAPI:
         resolved_settings,
     )
 
+    scenario_requests = telemetry_runtime.meter.create_counter(
+        "app.scenario.requests",
+        unit="{request}",
+        description="Number of controlled observability scenario requests.",
+    )
+    scenario_duration = telemetry_runtime.meter.create_histogram(
+        "app.scenario.duration",
+        unit="ms",
+        description="Duration of controlled observability scenarios.",
+    )
+    dependency_requests = telemetry_runtime.meter.create_counter(
+        "app.dependency.requests",
+        unit="{request}",
+        description="Number of simulated dependency requests.",
+    )
+    dependency_duration = telemetry_runtime.meter.create_histogram(
+        "app.dependency.duration",
+        unit="ms",
+        description="Duration of simulated dependency requests.",
+    )
+
     application.state.settings = resolved_settings
     application.state.telemetry = telemetry_runtime
 
@@ -235,6 +257,13 @@ def create_app(settings: Settings | None = None) -> FastAPI:
         """Introduce a bounded and observable response delay."""
 
         if delay_ms > resolved_settings.maximum_scenario_delay_ms:
+            scenario_requests.add(
+                1,
+                {
+                    "scenario.type": "latency",
+                    "scenario.outcome": "rejected",
+                },
+            )
             raise ControlledScenarioError(
                 error="scenario_delay_exceeded",
                 message=(
@@ -260,6 +289,18 @@ def create_app(settings: Settings | None = None) -> FastAPI:
                 extra={"delay_ms": delay_ms},
             )
 
+        scenario_requests.add(
+            1,
+            {
+                "scenario.type": "latency",
+                "scenario.outcome": "success",
+            },
+        )
+        scenario_duration.record(
+            delay_ms,
+            {"scenario.type": "latency"},
+        )
+
         return ScenarioResponse(
             scenario="latency",
             outcome="success",
@@ -276,6 +317,14 @@ def create_app(settings: Settings | None = None) -> FastAPI:
         """Generate a controlled service error."""
 
         logger.warning("error_scenario_triggered")
+
+        scenario_requests.add(
+            1,
+            {
+                "scenario.type": "error",
+                "scenario.outcome": "failure",
+            },
+        )
 
         raise ControlledScenarioError(
             error="controlled_service_failure",
@@ -297,6 +346,8 @@ def create_app(settings: Settings | None = None) -> FastAPI:
     ) -> ScenarioResponse:
         """Simulate success, failure, or timeout from a dependency."""
 
+        started_at = perf_counter()
+
         try:
             with telemetry_runtime.tracer.start_as_current_span("dependency.simulated") as span:
                 span.set_attribute("dependency.name", "simulated-upstream")
@@ -310,6 +361,12 @@ def create_app(settings: Settings | None = None) -> FastAPI:
                 span.set_status(Status(StatusCode.OK))
 
         except TimeoutError as exception:
+            duration_ms = (perf_counter() - started_at) * 1000
+            dependency_requests.add(1, {"dependency.outcome": "timeout"})
+            dependency_duration.record(
+                duration_ms,
+                {"dependency.outcome": "timeout"},
+            )
             logger.warning(
                 "dependency_timeout",
                 extra={"dependency": "simulated-upstream"},
@@ -322,6 +379,12 @@ def create_app(settings: Settings | None = None) -> FastAPI:
             ) from exception
 
         except ConnectionError as exception:
+            duration_ms = (perf_counter() - started_at) * 1000
+            dependency_requests.add(1, {"dependency.outcome": "failure"})
+            dependency_duration.record(
+                duration_ms,
+                {"dependency.outcome": "failure"},
+            )
             logger.warning(
                 "dependency_failure",
                 extra={"dependency": "simulated-upstream"},
@@ -332,6 +395,13 @@ def create_app(settings: Settings | None = None) -> FastAPI:
                 message="The simulated dependency is unavailable.",
                 status_code=502,
             ) from exception
+
+        duration_ms = (perf_counter() - started_at) * 1000
+        dependency_requests.add(1, {"dependency.outcome": "success"})
+        dependency_duration.record(
+            duration_ms,
+            {"dependency.outcome": "success"},
+        )
 
         logger.info(
             "dependency_call_completed",
