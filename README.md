@@ -128,7 +128,7 @@ For the complete validation contract and troubleshooting guidance, see
 The implemented default mode requires no AWS account or cloud credentials. Telemetry
 remains in project-owned Docker volumes with bounded retention.
 
-### Hybrid â€” planned
+### Hybrid — planned
 
 The planned hybrid mode will add selected AWS exporters while keeping the local pipeline
 active. It is intended for short-lived integration validation rather than permanent
@@ -138,21 +138,21 @@ duplication of all telemetry.
 
 ```text
 .
-â”œâ”€â”€ .github/workflows/        # Application CI
-â”œâ”€â”€ app/                      # Instrumented FastAPI service and tests
-â”œâ”€â”€ docs/
-â”‚   â”œâ”€â”€ adr/                  # Architecture decision records
-â”‚   â”œâ”€â”€ operations/           # Validation and troubleshooting guides
-â”‚   â”œâ”€â”€ screenshots/          # Reviewed, sanitized evidence
-â”‚   â””â”€â”€ architecture.md       # System design and telemetry flow
-â”œâ”€â”€ observability/
-â”‚   â”œâ”€â”€ collector/            # OpenTelemetry Collector configuration
-â”‚   â”œâ”€â”€ grafana/              # Provisioning and dashboard definitions
-â”‚   â”œâ”€â”€ loki/                 # Log backend configuration
-â”‚   â”œâ”€â”€ prometheus/           # Metrics backend configuration
-â”‚   â””â”€â”€ tempo/                # Trace backend configuration
-â”œâ”€â”€ scripts/                  # Cross-platform validation tools
-â””â”€â”€ compose.yaml              # Local six-service platform
+├── .github/workflows/        # Application CI
+├── app/                      # Instrumented FastAPI service and tests
+├── docs/
+│   ├── adr/                  # Architecture decision records
+│   ├── operations/           # Validation and troubleshooting guides
+│   ├── screenshots/          # Reviewed, sanitized evidence
+│   └── architecture.md       # System design and telemetry flow
+├── observability/
+│   ├── collector/            # OpenTelemetry Collector configuration
+│   ├── grafana/              # Provisioning and dashboard definitions
+│   ├── loki/                 # Log backend configuration
+│   ├── prometheus/           # Metrics backend configuration
+│   └── tempo/                # Trace backend configuration
+├── scripts/                  # Cross-platform validation tools
+└── compose.yaml              # Local six-service platform
 ```
 
 Directories are added only when they contain working artifacts. Planned components are
@@ -160,10 +160,10 @@ described in the roadmap instead of being represented by empty placeholders.
 
 ## Engineering decisions
 
-- [ADR 0001 â€” Use the OpenTelemetry Collector](docs/adr/0001-use-opentelemetry-collector.md)
-- [ADR 0002 â€” Use a local Grafana observability stack](docs/adr/0002-use-prometheus-instead-of-mimir.md)
-- [ADR 0003 â€” Keep local telemetry ephemeral](docs/adr/0003-store-telemetry-locally.md)
-- [ADR 0004 â€” Make AWS export optional](docs/adr/0004-make-cloudwatch-export-optional.md)
+- [ADR 0001 — Use the OpenTelemetry Collector](docs/adr/0001-use-opentelemetry-collector.md)
+- [ADR 0002 — Use a local Grafana observability stack](docs/adr/0002-use-prometheus-instead-of-mimir.md)
+- [ADR 0003 — Keep local telemetry ephemeral](docs/adr/0003-store-telemetry-locally.md)
+- [ADR 0004 — Make AWS export optional](docs/adr/0004-make-cloudwatch-export-optional.md)
 
 ## Validation evidence
 
@@ -240,7 +240,6 @@ commands. Hybrid mode must additionally prove bounded AWS export and successful 
 Licensed under the [Apache License 2.0](LICENSE).
 
 ---
-
 
 ## 📈 Repository Metrics
 
