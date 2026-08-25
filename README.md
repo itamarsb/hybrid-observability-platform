@@ -113,7 +113,7 @@ See [SECURITY.md](SECURITY.md) for vulnerability reporting and security expectat
 
 - [x] Define architecture, scope, and engineering decisions
 - [x] Implement and test the instrumented FastAPI service
-- [ ] Add the local OpenTelemetry, Prometheus, Loki, Tempo, and Grafana stack
+- [X] Add the local OpenTelemetry, Prometheus, Loki, Tempo, and Grafana stack
 - [ ] Provision dashboards, data sources, alerts, and recording rules
 - [ ] Add K6 workloads and failure scenarios
 - [ ] Provision the optional AWS path with Terraform
