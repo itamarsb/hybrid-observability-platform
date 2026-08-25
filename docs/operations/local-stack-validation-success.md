@@ -148,16 +148,3 @@ using a port with:
 Get-NetTCPConnection -LocalPort <port-number>
 ```
 
-## Evidence handling
-
-Only sanitized, reviewed evidence belongs in `docs/screenshots/`. Screenshots must not
-contain credentials, tokens, cloud account identifiers, private URLs, or unrelated
-personal information.
-
-The canonical successful local-validation evidence is stored at:
-
-```text
-docs/screenshots/validation/local-stack-validation-success.png
-```
-
-Runtime telemetry itself remains in Docker named volumes and is not committed to Git.
