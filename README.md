@@ -221,7 +221,7 @@ See [SECURITY.md](SECURITY.md) for vulnerability reporting and security expectat
 - [x] Provision Grafana data sources and the platform health dashboard
 - [x] Add reproducible end-to-end local validation
 - [x] Publish baseline CI, dashboard, and validation evidence
-- [ ] Add application telemetry dashboards and cross-signal investigation links
+- [x] Add application telemetry dashboards and cross-signal investigation links
 - [ ] Add alerting and Prometheus recording rules
 - [ ] Add k6 workloads and sustained failure scenarios
 - [ ] Run full-platform validation, security scanning, and cleanup checks in CI
