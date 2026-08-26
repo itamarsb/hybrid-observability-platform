@@ -191,6 +191,15 @@ metrics to Prometheus, logs to Loki, and traces to Tempo.
 
 ![Successful local stack validation](docs/screenshots/validation/local-stack-validation-success.png)
 
+### Application telemetry under controlled load
+
+The provisioned application dashboard exposes request rate, HTTP error rate, P95 and P99
+latency, route-level behavior, controlled scenarios, simulated dependencies, and
+correlated structured logs.
+
+![Application overview under controlled load](docs/screenshots/grafana/application-overview-under-load.png)
+
+
 ## Guardrails
 
 - Local mode is the safe default.
