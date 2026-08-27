@@ -54,7 +54,7 @@ and telemetry flows.
 ## Technology stack
 
 | Area | Technology | Status |
-|---|---|---|
+|---|---|:---:|
 | Reference workload | Python, FastAPI, Uvicorn | Implemented |
 | Instrumentation and collection | OpenTelemetry SDK and Collector | Implemented |
 | Metrics | Prometheus | Implemented |
