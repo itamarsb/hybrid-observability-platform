@@ -72,7 +72,13 @@ the injected condition; it does not by itself indicate an unexpected platform fa
 7. Use `Logs for this trace` to return to the related Loki entries.
 
 This workflow uses the shared OpenTelemetry trace ID to move from a service-level symptom
-to request-level evidence.
+to request-level evidence. For exact PromQL and LogQL queries, controlled HTTP 503/502/504
+exercises, evidence criteria, and failure diagnosis, follow the
+[HTTP Error Investigation Runbook](http-error-investigation.md).
+
+The existing end-to-end validator checks that metrics, logs, and traces reach their
+backends independently. It does not yet assert that all signals are correlated to the
+same generated request.
 
 ## No-data behavior
 
