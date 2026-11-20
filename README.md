@@ -121,6 +121,11 @@ intentional.
 For the complete validation contract and troubleshooting guidance, see
 [Local Stack Validation](docs/operations/local-stack-validation.md).
 
+For a request-specific HTTP failure investigation using Prometheus, Loki, and Tempo,
+see the [HTTP Error Investigation Runbook](docs/operations/http-error-investigation.md).
+The documented procedure is manual; automated per-request cross-backend
+correlation verification remains future work.
+
 ## Operating modes
 
 ### Local
@@ -226,7 +231,8 @@ See [SECURITY.md](SECURITY.md) for vulnerability reporting and security expectat
 - [ ] Add k6 workloads and sustained failure scenarios
 - [ ] Run full-platform validation, security scanning, and cleanup checks in CI
 - [ ] Provision the optional AWS path with Terraform
-- [ ] Publish a complete metrics-to-logs-to-traces investigation runbook
+- [x] Publish a complete metrics-to-logs-to-traces investigation runbook
+- [ ] Automate per-request correlation assertions across Loki and Tempo
 
 ## Definition of done
 
