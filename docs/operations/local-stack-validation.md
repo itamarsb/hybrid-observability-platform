@@ -80,8 +80,9 @@ The checks run in a fixed order and stop at the first failure:
 The final three operations form **one additional validator check**, making
 16 checks in total. Prometheus metrics are route-level aggregates; the
 per-request correlation is established by the response, Loki, and Tempo.
-The new correlation parser is covered by offline unit tests. The full-stack
-integration result for this new check has not yet been recorded.
+The new correlation parser is covered by offline unit tests. A successful local
+16/16 integration run on 2026-11-20 is documented in the
+[HTTP Correlation Validation Record](http-correlation-validation-2026-11-20.md).
 
 The controlled error generated during validation is intentional. An HTTP `503` response
 from that scenario is expected and is used to validate error telemetry.
@@ -99,10 +100,11 @@ Exit code `0` means that every check passed. Exit code `1` means that a prerequi
 missing or a validation check failed.
 
 The validator does not stop the platform or remove telemetry after completion. This makes
-the generated signals available for investigation in Grafana. The `16/16` output
-above is the **expected successful result**, not an assertion that a full-stack
-integration run of the new check has already passed. Earlier repository
-screenshots may reflect the previous 15-check version.
+the generated signals available for investigation in Grafana. A complete local run
+returned `16/16 checks passed` on 2026-11-20; see the
+[record of that execution](http-correlation-validation-2026-11-20.md).
+The existing versioned validation screenshot belongs to an earlier run and
+should not be presented as proof of the newer correlation check.
 
 ## Inspect the running platform
 
