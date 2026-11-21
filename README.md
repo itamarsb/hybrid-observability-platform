@@ -105,7 +105,7 @@ and preserves all named volumes.
 After validation, open:
 
 | Interface | URL |
-|---|---|
+|:---:|:---:|
 | Application API documentation | <http://127.0.0.1:8000/docs> |
 | Grafana | <http://127.0.0.1:3000> |
 | Prometheus | <http://127.0.0.1:9090> |
