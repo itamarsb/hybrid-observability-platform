@@ -43,6 +43,20 @@ workstations or CI runners:
 python .\scripts\validate-local-stack.py --telemetry-timeout 120
 ```
 
+## Offline correlation unit tests
+
+The parser assertions are independent of Docker and can be executed on any
+machine with Python 3.12 or later:
+
+```bash
+python -m unittest discover -s scripts/tests -v
+```
+
+The offline tests reject mismatched IDs, error events, routes, statuses, and
+services. They do not verify that the running Collector delivers telemetry.
+The GitHub Actions application workflow runs them whenever application or
+script code changes.
+
 ## Validation sequence
 
 The checks run in a fixed order and stop at the first failure:
@@ -57,7 +71,17 @@ The checks run in a fixed order and stop at the first failure:
 8. generate deterministic application, latency, and controlled-error requests;
 9. confirm that custom application metrics reached Prometheus;
 10. confirm that structured application logs reached Loki;
-11. confirm that application traces reached Tempo.
+11. confirm that application traces reached Tempo;
+12. issue another controlled HTTP 503 and require its `trace_id` in the JSON response;
+13. confirm the route/status metric exists in Prometheus, the structured error log
+    with the same trace ID exists in Loki, and a matching HTTP server span exists
+    under that exact trace ID in Tempo.
+
+The final three operations form **one additional validator check**, making
+16 checks in total. Prometheus metrics are route-level aggregates; the
+per-request correlation is established by the response, Loki, and Tempo.
+The new correlation parser is covered by offline unit tests. The full-stack
+integration result for this new check has not yet been recorded.
 
 The controlled error generated during validation is intentional. An HTTP `503` response
 from that scenario is expected and is used to validate error telemetry.
@@ -67,7 +91,7 @@ from that scenario is expected and is used to validate error telemetry.
 A successful run ends with:
 
 ```text
-Validation completed successfully: 15/15 checks passed.
+Validation completed successfully: 16/16 checks passed.
 The stack remains running and all named volumes are preserved.
 ```
 
@@ -75,7 +99,10 @@ Exit code `0` means that every check passed. Exit code `1` means that a prerequi
 missing or a validation check failed.
 
 The validator does not stop the platform or remove telemetry after completion. This makes
-the generated signals available for investigation in Grafana.
+the generated signals available for investigation in Grafana. The `16/16` output
+above is the **expected successful result**, not an assertion that a full-stack
+integration run of the new check has already passed. Earlier repository
+screenshots may reflect the previous 15-check version.
 
 ## Inspect the running platform
 
