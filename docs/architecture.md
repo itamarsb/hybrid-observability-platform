@@ -65,14 +65,15 @@ are provisioned by this repository at present.
 - Local Prometheus, Loki, and Tempo retention policies.
 - Container CPU and memory limits in Compose.
 - A local validator with 16 checks, including a new HTTP 503 route-level metric
-  and request-specific Loki/Tempo correlation check. The new check is unit tested;
-  full-stack execution evidence remains pending.
+  and request-specific Loki/Tempo correlation check. The check has 11 passing
+  offline unit tests and a documented successful local 16/16 integration run
+  on 2026-11-20.
 - Controlled application-side failure and delay scenarios.
 
 Additional hardening (for example, exporter resilience tests, secret-attribute
 filtering, load testing, and full-platform security checks) remains to be
-implemented and validated. The request-correlation check must still be
-validated against the running local stack.
+implemented and validated. The request-correlation check has been exercised
+against the running local stack; automated platform CI remains separate work.
 
 ## Investigation scenario
 
@@ -87,8 +88,9 @@ metrics identify the route-level symptom, while the response trace ID and
 structured logs identify the individual request. The runbook provides the manual investigation path. The new validator check
 also requires the same trace ID in the HTTP response, the structured Loki
 error log, and a matching Tempo server span. Prometheus metrics remain
-route-level evidence rather than a per-request join. A successful full-stack
-run has not yet been recorded.
+route-level evidence rather than a per-request join. A successful local
+full-stack run is documented in the
+[HTTP Correlation Validation Record](operations/http-correlation-validation-2026-11-20.md).
 
 See [HTTP Error Investigation Runbook](operations/http-error-investigation.md)
 and [Local Stack Validation](operations/local-stack-validation.md).
