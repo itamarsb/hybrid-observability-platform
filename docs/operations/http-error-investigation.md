@@ -5,9 +5,11 @@
 Investigate a controlled HTTP error in the local FastAPI workload by moving from
 aggregate Prometheus metrics to a request-specific Loki log and its Tempo trace.
 This is an operator workflow. The local validator also includes an automated
-HTTP 503 correlation check, but its full-stack execution result has not yet
-been recorded. Aggregate Prometheus metrics are associated with the same
-route/status, not with an individual trace ID.
+HTTP 503 correlation check. A successful local 16/16 integration run was
+recorded on 2026-11-20; see the
+[HTTP Correlation Validation Record](http-correlation-validation-2026-11-20.md).
+Aggregate Prometheus metrics are associated with the same route/status,
+not with an individual trace ID.
 
 The primary exercise uses `GET /api/v1/scenarios/error`, which deliberately returns
 HTTP 503. The dependency scenarios provide optional HTTP 502 and 504 variants.
@@ -221,8 +223,11 @@ This runbook documents a reproducible **manual** correlation procedure. The
 additional automated check in `scripts/validate-local-stack.py` generates a
 new HTTP 503 and validates the same trace ID in the response, Loki event,
 and Tempo HTTP server span. It also checks route/status aggregate metrics in
-Prometheus. The helper logic is covered by offline unit tests, but no
-successful full-stack run of the new check has yet been recorded.
+Prometheus. The helper logic is covered by offline unit tests and a
+successful full-stack local run is documented in the
+[HTTP Correlation Validation Record](http-correlation-validation-2026-11-20.md).
+This confirms the API-level correlation; the manual Grafana navigation
+workflow described above remains a separate operator exercise.
 
 Run the offline tests with:
 
