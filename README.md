@@ -205,7 +205,10 @@ metrics to Prometheus, logs to Loki, and traces to Tempo.
 A separate [local HTTP correlation validation record](docs/operations/http-correlation-validation-2026-11-20.md)
 documents a successful 16/16 run and 11 passing unit tests on 2026-11-20.
 The screenshot above belongs to an earlier validation run and must not be
-interpreted as evidence of the newer 16-check execution.
+interpreted as evidence of the newer 16-check execution. A separate manual
+Grafana investigation on 2026-11-21 recovered matching Loki records and a
+Tempo trace by the same request ID; see the validation record for links to
+the existing screenshots, which retain their original generic filenames.
 
 ### Application telemetry under controlled load
 
