@@ -64,12 +64,15 @@ are provisioned by this repository at present.
 - Configurable application trace sampling; local Compose currently samples 100%.
 - Local Prometheus, Loki, and Tempo retention policies.
 - Container CPU and memory limits in Compose.
-- A local validator with 15 checks for platform health and telemetry delivery.
+- A local validator with 16 checks, including a new HTTP 503 route-level metric
+  and request-specific Loki/Tempo correlation check. The new check is unit tested;
+  full-stack execution evidence remains pending.
 - Controlled application-side failure and delay scenarios.
 
-Additional hardening (for example, exporter resilience tests, automated
-same-request correlation assertions, secret-attribute filtering, load testing,
-and full-platform security checks) remains to be implemented and validated.
+Additional hardening (for example, exporter resilience tests, secret-attribute
+filtering, load testing, and full-platform security checks) remains to be
+implemented and validated. The request-correlation check must still be
+validated against the running local stack.
 
 ## Investigation scenario
 
@@ -81,9 +84,11 @@ nested-span investigation.
 
 The current dashboards do not require a metric exemplar to begin this process:
 metrics identify the route-level symptom, while the response trace ID and
-structured logs identify the individual request. The procedure is manual;
-the existing validator does not automatically prove per-request cross-signal
-correlation.
+structured logs identify the individual request. The runbook provides the manual investigation path. The new validator check
+also requires the same trace ID in the HTTP response, the structured Loki
+error log, and a matching Tempo server span. Prometheus metrics remain
+route-level evidence rather than a per-request join. A successful full-stack
+run has not yet been recorded.
 
 See [HTTP Error Investigation Runbook](operations/http-error-investigation.md)
 and [Local Stack Validation](operations/local-stack-validation.md).
