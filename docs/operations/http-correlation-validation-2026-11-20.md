@@ -69,6 +69,48 @@ not an individually trace-linked metric exemplar.
   15-check workflow; it must not be relabeled as evidence of this 16-check run.
 - Runtime logs, trace payloads, and backend volumes are not committed.
 
+
+## Manual Grafana inspection — 2026-11-21
+
+A later, separate local investigation inspected one newly generated
+controlled HTTP 503 from the FastAPI endpoint.
+
+Observed request:
+
+- Route: `GET /api/v1/scenarios/error`.
+- HTTP response: `503 Service Unavailable`.
+- Error: `controlled_service_failure`.
+- Trace ID: `ff5bf2fa82714eb5a705df3808d4b5f2`.
+- Event time: 2026-11-21, approximately 20:19 local time (UTC−03:00).
+
+In Grafana Explore, a Loki query filtered by the exact trace ID returned
+three log records for that request, including an application warning
+`controlled_scenario_failed` with the expected route and status 503.
+The access log also contained the same trace ID.
+
+In Grafana Explore with Tempo selected, a **direct Trace ID query**
+retrieved the matching trace:
+
+- Service: `hybrid-observability-api`.
+- Operation: `GET /api/v1/scenarios/error`.
+- Duration displayed: 183.59 ms.
+- Services displayed: 1.
+- Spans displayed: 3.
+
+The generic screenshot names in the repository are retained intentionally.
+These uploaded files are associated with this visual investigation:
+
+- [Clipboard_11-21-2026_07.png](../screenshots/Clipboard_11-21-2026_07.png)
+- [Clipboard_11-21-2026_08.png](../screenshots/Clipboard_11-21-2026_08.png)
+
+This inspection confirms that Grafana can query both the Loki logs and
+the corresponding Tempo trace by ID. The screenshots do **not** yet
+establish that the Grafana `TraceID` derived-field click-through works,
+that the reverse `Logs for this trace` link works, or that the HTTP 503
+attribute has been inspected in the expanded Tempo server-span details.
+Those UI-specific checks remain separate from the automated 16/16
+backend validation.
+
 ## Reproduce
 
 On an authorized local development machine with Docker running:
