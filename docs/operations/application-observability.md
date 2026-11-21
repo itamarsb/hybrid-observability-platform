@@ -76,9 +76,11 @@ to request-level evidence. For exact PromQL and LogQL queries, controlled HTTP 5
 exercises, evidence criteria, and failure diagnosis, follow the
 [HTTP Error Investigation Runbook](http-error-investigation.md).
 
-The existing end-to-end validator checks that metrics, logs, and traces reach their
-backends independently. It does not yet assert that all signals are correlated to the
-same generated request.
+The local validator checks that metrics, logs, and traces reach their backends
+and now includes a request-specific HTTP 503 verification using the trace ID
+returned by the API. This check has isolated unit-test coverage; its full-stack
+execution result remains to be captured. Prometheus supplies route-level HTTP
+metrics; unlike logs and traces, these aggregate metrics are not joined by trace ID.
 
 ## No-data behavior
 
