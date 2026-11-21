@@ -4,9 +4,10 @@
 
 Investigate a controlled HTTP error in the local FastAPI workload by moving from
 aggregate Prometheus metrics to a request-specific Loki log and its Tempo trace.
-This is an operator workflow, not an automated proof that all three signals belong
-to the same request. The existing stack validator separately checks telemetry
-delivery to each backend.
+This is an operator workflow. The local validator also includes an automated
+HTTP 503 correlation check, but its full-stack execution result has not yet
+been recorded. Aggregate Prometheus metrics are associated with the same
+route/status, not with an individual trace ID.
 
 The primary exercise uses `GET /api/v1/scenarios/error`, which deliberately returns
 HTTP 503. The dependency scenarios provide optional HTTP 502 and 504 variants.
@@ -216,9 +217,19 @@ manual investigation as a passed test.
 - **HTTP 503 has no dependency span:** this is expected for the direct
   controlled-error endpoint; use `/dependency` for nested spans.
 
-This runbook documents a reproducible **manual** correlation procedure.
-The repository does not yet include an automated assertion that a single
-generated request is present in both Loki and Tempo under the same trace ID.
+This runbook documents a reproducible **manual** correlation procedure. The
+additional automated check in `scripts/validate-local-stack.py` generates a
+new HTTP 503 and validates the same trace ID in the response, Loki event,
+and Tempo HTTP server span. It also checks route/status aggregate metrics in
+Prometheus. The helper logic is covered by offline unit tests, but no
+successful full-stack run of the new check has yet been recorded.
+
+Run the offline tests with:
+
+~~~bash
+python -m unittest discover -s scripts/tests -v
+~~~
+
 Metric exemplars, production alerting, sustained k6 tests, and cloud export
 are not prerequisites for this local exercise and should not be described
 as implemented capabilities.
