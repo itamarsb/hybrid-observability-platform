@@ -98,8 +98,9 @@ The validator builds and starts the stack, checks all six services, generates co
 traffic, and checks that metrics, logs, and traces reached their respective backends.
 The additional HTTP 503 check compares a newly returned trace ID with a structured
 Loki event and the corresponding Tempo server span, alongside route-level Prometheus
-metrics. The new check has unit-test coverage; a full-stack pass has not yet been
-recorded. The validator leaves the stack running and preserves all named volumes.
+metrics. The check passed during a local integration run on 2026-11-20, alongside
+11 passing offline correlation unit tests. The validator leaves the stack running
+and preserves all named volumes.
 
 After validation, open:
 
@@ -126,9 +127,10 @@ For the complete validation contract and troubleshooting guidance, see
 
 For a request-specific HTTP failure investigation using Prometheus, Loki, and Tempo,
 see the [HTTP Error Investigation Runbook](docs/operations/http-error-investigation.md).
-The documented procedure is manual; automated per-request cross-backend
-correlation verification is implemented in the local validator; the new check still
-requires a successful full-stack execution before it can be cited as integration evidence.
+The runbook documents the manual investigation workflow. Automated per-request
+correlation verification is implemented in the local validator; its first
+successful local integration run is documented in the
+[HTTP Correlation Validation Record](docs/operations/http-correlation-validation-2026-11-20.md).
 
 ## Operating modes
 
@@ -200,6 +202,11 @@ metrics to Prometheus, logs to Loki, and traces to Tempo.
 
 ![Successful local stack validation](docs/screenshots/validation/local-stack-validation-success.png)
 
+A separate [local HTTP correlation validation record](docs/operations/http-correlation-validation-2026-11-20.md)
+documents a successful 16/16 run and 11 passing unit tests on 2026-11-20.
+The screenshot above belongs to an earlier validation run and must not be
+interpreted as evidence of the newer 16-check execution.
+
 ### Application telemetry under controlled load
 
 The provisioned application dashboard exposes request rate, HTTP error rate, P95 and P99
@@ -237,7 +244,7 @@ See [SECURITY.md](SECURITY.md) for vulnerability reporting and security expectat
 - [ ] Provision the optional AWS path with Terraform
 - [x] Publish a complete metrics-to-logs-to-traces investigation runbook
 - [x] Implement per-request HTTP 503 correlation assertions across Loki and Tempo
-- [ ] Record a successful full-stack execution of the correlation check
+- [x] Record a successful local full-stack execution of the correlation check
 
 ## Definition of done
 
