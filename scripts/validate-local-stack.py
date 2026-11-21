@@ -16,6 +16,12 @@ from dataclasses import dataclass
 from pathlib import Path
 from typing import Any, Callable
 
+from http_correlation import (
+    loki_has_correlated_error,
+    tempo_has_correlated_error,
+    trace_id_from_response,
+)
+
 
 PROJECT_ROOT = Path(__file__).resolve().parents[1]
 EXPECTED_SERVICES = {
@@ -295,6 +301,80 @@ def check_application_traces() -> None:
         raise ValidationError("application traces were not found")
 
 
+
+def check_http_error_correlation(timeout: float) -> None:
+    """Prove one controlled HTTP 503 is linked to its Loki log and Tempo trace."""
+
+    response = http_request(
+        "http://127.0.0.1:8000/api/v1/scenarios/error",
+        accepted_statuses={503},
+    )
+    try:
+        trace_id = trace_id_from_response(response.json())
+    except ValueError as error:
+        raise ValidationError(str(error)) from error
+
+    print(f"    Controlled HTTP 503 trace_id: {trace_id}")
+
+    def check_error_metric() -> None:
+        """Verify the route/status aggregate was scraped; metrics are not trace-specific."""
+
+        results = prometheus_query(
+            'http_server_duration_milliseconds_count{'
+            'service_name="hybrid-observability-api",'
+            'http_target="/api/v1/scenarios/error",'
+            'http_status_code="503"}'
+        )
+        if not any(
+            isinstance(item.get("value"), list)
+            and len(item["value"]) >= 2
+            and float(item["value"][1]) > 0
+            for item in results
+        ):
+            raise ValidationError("Prometheus has no HTTP 503 metric for the controlled route")
+
+    def check_error_log() -> None:
+        """Require the error event, route, status, and exact request trace ID in Loki."""
+
+        now_ns = time.time_ns()
+        expression = (
+            '{service_name="hybrid-observability-api"}'
+            f' |= "controlled_scenario_failed" |= "{trace_id}"'
+        )
+        params = urllib.parse.urlencode(
+            {
+                "query": expression,
+                "start": str(now_ns - 300_000_000_000),
+                "end": str(now_ns),
+                "limit": "100",
+                "direction": "backward",
+            }
+        )
+        payload = http_request(
+            f"http://127.0.0.1:3100/loki/api/v1/query_range?{params}"
+        ).json()
+        if not loki_has_correlated_error(payload, trace_id):
+            raise ValidationError("Loki has no matching structured HTTP 503 log for this trace ID")
+
+    def check_error_trace() -> None:
+        """Retrieve the exact trace by ID, not a generic service search result."""
+
+        response = http_request(
+            f"http://127.0.0.1:3200/api/v2/traces/{trace_id}",
+            accepted_statuses={200, 404},
+        )
+        if response.status == 404:
+            raise ValidationError("Tempo has not indexed the requested trace ID")
+        if not tempo_has_correlated_error(response.json(), trace_id):
+            raise ValidationError(
+                "Tempo has no matching HTTP 503 server span for this trace ID"
+            )
+
+    wait_until(check_error_metric, timeout=timeout)
+    wait_until(check_error_log, timeout=timeout)
+    wait_until(check_error_trace, timeout=timeout)
+
+
 def build_checks(timeout: float) -> list[tuple[str, Callable[[], None]]]:
     """Build the ordered validation contract."""
 
@@ -336,6 +416,10 @@ def build_checks(timeout: float) -> list[tuple[str, Callable[[], None]]]:
         (
             "Application traces received by Tempo",
             lambda: wait_until(check_application_traces, timeout=timeout),
+        ),
+        (
+            "HTTP 503 metrics, log, and trace correlation",
+            lambda: check_http_error_correlation(timeout),
         ),
     ]
 
