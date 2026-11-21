@@ -42,7 +42,7 @@ Local storage is the default. The future AWS export must be enabled explicitly a
 not replace the local backends.
 
 | Signal | Source | Current local destination | Planned AWS destination |
-|---|---|---|---|
+|:---:|:---:|:---:|:---:|
 | Metrics | FastAPI / Collector | Prometheus | CloudWatch Metrics |
 | Logs | FastAPI / containers | Loki | CloudWatch Logs |
 | Traces | FastAPI | Tempo | AWS X-Ray |
