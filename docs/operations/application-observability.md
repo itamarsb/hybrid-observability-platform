@@ -78,9 +78,11 @@ exercises, evidence criteria, and failure diagnosis, follow the
 
 The local validator checks that metrics, logs, and traces reach their backends
 and now includes a request-specific HTTP 503 verification using the trace ID
-returned by the API. This check has isolated unit-test coverage; its full-stack
-execution result remains to be captured. Prometheus supplies route-level HTTP
-metrics; unlike logs and traces, these aggregate metrics are not joined by trace ID.
+returned by the API. This check has isolated unit-test coverage and a documented
+successful local 16/16 integration run on 2026-11-20 (see the
+[HTTP Correlation Validation Record](http-correlation-validation-2026-11-20.md)).
+Prometheus supplies route-level HTTP metrics; unlike logs and traces, these
+aggregate metrics are not joined by trace ID.
 
 ## No-data behavior
 
