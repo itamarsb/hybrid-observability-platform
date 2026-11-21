@@ -95,8 +95,11 @@ python3 ./scripts/validate-local-stack.py
 ```
 
 The validator builds and starts the stack, checks all six services, generates controlled
-traffic, and confirms that metrics, logs, and traces reached their respective backends.
-It leaves the stack running and preserves all named volumes.
+traffic, and checks that metrics, logs, and traces reached their respective backends.
+The additional HTTP 503 check compares a newly returned trace ID with a structured
+Loki event and the corresponding Tempo server span, alongside route-level Prometheus
+metrics. The new check has unit-test coverage; a full-stack pass has not yet been
+recorded. The validator leaves the stack running and preserves all named volumes.
 
 After validation, open:
 
@@ -124,7 +127,8 @@ For the complete validation contract and troubleshooting guidance, see
 For a request-specific HTTP failure investigation using Prometheus, Loki, and Tempo,
 see the [HTTP Error Investigation Runbook](docs/operations/http-error-investigation.md).
 The documented procedure is manual; automated per-request cross-backend
-correlation verification remains future work.
+correlation verification is implemented in the local validator; the new check still
+requires a successful full-stack execution before it can be cited as integration evidence.
 
 ## Operating modes
 
@@ -232,7 +236,8 @@ See [SECURITY.md](SECURITY.md) for vulnerability reporting and security expectat
 - [ ] Run full-platform validation, security scanning, and cleanup checks in CI
 - [ ] Provision the optional AWS path with Terraform
 - [x] Publish a complete metrics-to-logs-to-traces investigation runbook
-- [ ] Automate per-request correlation assertions across Loki and Tempo
+- [x] Implement per-request HTTP 503 correlation assertions across Loki and Tempo
+- [ ] Record a successful full-stack execution of the correlation check
 
 ## Definition of done
 
