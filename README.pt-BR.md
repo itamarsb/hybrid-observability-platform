@@ -50,7 +50,7 @@ explicitamente e não substituirá os back-ends locais.
 | Traces | FastAPI | Tempo | AWS X-Ray |
 | Visualização | Todos os back-ends locais | Grafana | Consoles da AWS / fontes de dados do Grafana |
 
-Consulte a [documentação de arquitetura](docs/architecture.md) para conhecer as responsabilidades
+Consulte a [documentação de arquitetura](docs/architecture.pt-BR.md) para conhecer as responsabilidades
 dos componentes e os fluxos de telemetria.
 
 ## Tecnologias utilizadas

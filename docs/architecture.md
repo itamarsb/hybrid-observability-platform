@@ -1,5 +1,7 @@
 # Architecture
 
+**Language:** **English (US)** | [Português (Brasil)](architecture.pt-BR.md)
+
 ## Scope
 
 The Hybrid Observability Platform is a single-node, local-first reference environment
