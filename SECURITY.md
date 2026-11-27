@@ -1,5 +1,7 @@
 # Security Policy
 
+**Language:** **English (US)** | [Português (Brasil)](SECURITY.pt-BR.md)
+
 ## Supported versions
 
 The project is under active development and has no stable release. Only the latest commit on `main` is supported on a best-effort basis.

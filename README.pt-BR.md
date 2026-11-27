@@ -233,7 +233,7 @@ correlacionados.
 - Recursos híbridos futuros deverão receber tags, ter duração limitada e ser removidos após a validação.
 - Capturas de tela e dados de exemplo não devem expor IDs de contas, credenciais, tokens ou dados pessoais.
 
-Consulte [SECURITY.md](SECURITY.md) para conhecer os procedimentos de comunicação de vulnerabilidades
+Consulte [SECURITY.pt-BR.md](SECURITY.pt-BR.md) para conhecer os procedimentos de comunicação de vulnerabilidades
 e os requisitos de segurança.
 
 ## Roadmap
