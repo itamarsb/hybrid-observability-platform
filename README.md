@@ -1,5 +1,7 @@
 # Hybrid Observability Platform
 
+**Language:** **English (US)** | [Português (Brasil)](README.pt-BR.md)
+
 [![Application CI](https://github.com/itamarsb/hybrid-observability-platform/actions/workflows/app-ci.yml/badge.svg?branch=main)](https://github.com/itamarsb/hybrid-observability-platform/actions/workflows/app-ci.yml)
 
 A local-first observability platform that collects metrics, logs, and traces from an
