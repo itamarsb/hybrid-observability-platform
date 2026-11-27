@@ -1,5 +1,7 @@
 # Hybrid Observability API
 
+**Language:** **English (US)** | [Português (Brasil)](README.pt-BR.md)
+
 Instrumented FastAPI workload used by the [Hybrid Observability Platform](../README.md) to generate normal requests, latency, errors, dependency failures, OpenTelemetry metrics and traces, and structured JSON logs.
 
 ## Requirements

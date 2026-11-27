@@ -134,6 +134,8 @@ correlation verification is implemented in the local validator; its first
 successful local integration run is documented in the
 [HTTP Correlation Validation Record](docs/operations/http-correlation-validation-2026-11-20.md).
 
+For standalone application execution, endpoints, and development tests, see the [application documentation](app/README.md).
+
 ## Operating modes
 
 ### Local

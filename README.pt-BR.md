@@ -134,6 +134,8 @@ por requisição está implementada no validador local; seu primeiro ensaio de i
 bem-sucedido está documentado no
 [Registro de validação da correlação HTTP](docs/operations/http-correlation-validation-2026-11-20.md).
 
+Para executar a aplicação isoladamente, consultar os endpoints e executar os testes de desenvolvimento, consulte a [documentação da aplicação](app/README.pt-BR.md).
+
 ## Modos de operação
 
 ### Local
