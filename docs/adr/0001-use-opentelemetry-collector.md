@@ -1,5 +1,7 @@
 # ADR 0001: Use the OpenTelemetry Collector
 
+**Language:** **English (US)** | [Português (Brasil)](0001-use-opentelemetry-collector.pt-BR.md)
+
 - **Status:** Accepted
 - **Date:** 2026-08-21
 

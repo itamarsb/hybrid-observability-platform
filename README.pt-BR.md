@@ -175,7 +175,7 @@ planejados são descritos no roadmap, em vez de serem representados por diretór
 
 ## Decisões de engenharia
 
-- [ADR 0001 — Utilizar o OpenTelemetry Collector](docs/adr/0001-use-opentelemetry-collector.md)
+- [ADR 0001 — Utilizar o OpenTelemetry Collector](docs/adr/0001-use-opentelemetry-collector.pt-BR.md)
 - [ADR 0002 — Utilizar uma stack local de observabilidade com Grafana](docs/adr/0002-use-prometheus-instead-of-mimir.md)
 - [ADR 0003 — Manter a telemetria local efêmera](docs/adr/0003-store-telemetry-locally.md)
 - [ADR 0004 — Tornar opcional a exportação para a AWS](docs/adr/0004-make-cloudwatch-export-optional.md)
